@@ -1,0 +1,124 @@
+<!-- To show the products available in the database -->
+<nav class="heading navbar bg-transparent navbar-dark navbar-expand-lg">
+    <div class="supportHeading container-fluid ">
+        <!-- To provide a link to navigate back -->
+        <a class="cart navbar-brand" href="#">Go Back</a>
+        &nbsp;
+        <button class="button navbar-toggler bg-transparent" type="button" 
+        data-bs-toggle="collapse" data-bs-target="#supportingContent" aria-controls="supportingContent" 
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="filters collapse navbar-collapse" id="supportingContent">
+            <ul class="navbar-nav me-auto mb-3 mb-lg-1">
+                <!-- To provide option to filter by brand if user is logged in -->
+                <select [(ngModel)]="selectedBrand" *ngIf="LoggedIn()">
+                    <option value="" disabled>Filter_By_Brand</option>
+                    <option *ngFor=" let pType of productBrand" [ngValue]="pType">
+                        {{pType}}
+                    </option>
+                </select>
+                &nbsp;&nbsp;
+                <button type="button" class="btn btn-sm btn-danger" 
+                data-bs-toggle="modal" data-bs-target="#modalBackup" *ngIf="LoggedIn()"> <!-- To show the Price Min/Max modal -->
+                    Filter By Price
+                </button>
+                &nbsp;&nbsp;
+                <button (click)="clearAllFilters()" type="button" class="btn btn-sm btn-info"> Clear </button>
+            </ul>
+
+            <form class="form-header" onsubmit="return false;" method="GET">
+                <!-- To provide search bar to perform search operation-->
+                <input #myInput (keyup.enter)="findProduct(myInput.value)" class="input-lg au-input" type="text" placeholder="Type Product/Brand Name" />&nbsp;
+                <button (click)="findProduct(myInput.value)" class="btn btn-sm btn-info" type="submit">Search</button>
+                &nbsp;&nbsp;
+                <!-- To provide the LogOut or Login button based user Login state -->
+                <button (click)="logout()" type="button" class="btn btn-sm btn-danger" *ngIf="LoggedIn()">Logout</button>
+                <button (click)="login()" type="button" class="btn btn-sm btn-success" *ngIf="!LoggedIn()">Login</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<header class="heading py-2">
+    <div class="container px-3 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="h1">STEP INTO A NEW WORLD OF STYLE</h1>
+        </div>
+    </div>
+</header>
+
+<body class="d-flex flex-column min-vh-100">
+    <section class="py-3">
+        <div class="container mt-5 px-3 px-lg-5">
+            <div class="row gx-3 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                <!-- To show the details of every product present in the database -->
+                <div class="col lg-6 mb-5"
+                    *ngFor="let products of productList | brandfilterpipe:selectedBrand | pricefilter:minPrice:maxPrice">
+                    <div class="card h-100">
+                        <img class="card-img-top" src={{products.imageUrl}} />
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">{{products.brand}}</h5>
+                                <h5 class="fw-bolder">{{products.name}} {{products.productCode}}</h5>
+                                <div *ngIf="LoggedIn()">₹{{getPrice(products.productCode)}}
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="card-footer p-3 pt-0 border-top-0 bg-transparent">
+                            <!-- To view specific Product details and serviceAbility-->
+                            <div class="text-center" *ngIf="LoggedIn()"><a class="btn btn-outline-dark mt-auto"
+                                    routerLink="/view-product/{{products.productCode}}">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div *ngIf="(productList | brandfilterpipe:selectedBrand | pricefilter:minR:maxR)?.length===0">
+            <h4 class="h4 text-center text-danger"> Sorry No Result was found </h4>
+            <img src="https://cdn.dribbble.com/users/1785628/screenshots/5605512/media/097297f8e21d501ba45d7ce437ed77bd.gif"
+                style="padding-left: 17%;height: 80%; width: 80%;">
+        </div>
+    </section>
+</body>
+
+<!-- Price Min/Max Modal -->
+<!-- This Modal is linked to FilterByPrice button in navbar -->
+<div class="modal fade" id="modalBackup" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="modalBackupLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalBackupLabel" style="padding-left: 150px">Filter By Price</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formValue">
+                    <input type="number" placeholder="Minimum Range" formControlName="minR" style="margin-left: 35px"
+                        [(ngModel)]="minR">
+                    To
+                    <input type="number" placeholder="Maximum Range" formControlName="maxR" [(ngModel)]="maxR">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" *ngIf="minR<maxR ||minR==null || maxR==null; else templateName"
+                    (click)="UpdateMinMax()" class="btn btn-primary" data-bs-dismiss="modal">Filter</button>
+                <ng-template #templateName>
+                    <small class="text-danger">MinRange cannot be equal or greater than MaxRange</small>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footerHeading py-3">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; UrbanHarbor 2023</p>
+    </div>
+</footer>

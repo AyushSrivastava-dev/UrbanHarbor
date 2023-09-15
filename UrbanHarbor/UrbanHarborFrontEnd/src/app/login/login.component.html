@@ -1,0 +1,61 @@
+<header class="heading py-2">
+    <div class="container px-4 px-lg-5 ">
+        <div class="text-center text-white">
+            <h1 class="display-3 fw-bolder">
+                UrbanHarbor
+            </h1>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="subHeading row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="text-center">
+                    <h1>Login</h1>
+                    <h6>Please enter EmailId & Password</h6>
+                </div>
+
+                <form #loginForm="ngForm" (ngSubmit)="checkLogin()">
+
+                    <small class="danger">{{msg}}</small>
+                    <div class="mb-3">
+                        <label for="email">Email:</label>
+                        <input type="text" class="form-control" placeholder="Enter email" 
+                        name="username" [(ngModel)]="user.username" required pattern="^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$"
+                            #username="ngModel" [class.is-invalid]="username.invalid && username.touched">
+
+                        <div *ngIf="username.errors && (username.invalid && username.touched)">
+                            <small class="text-danger" *ngIf="username.errors?.['required']"> *email Id is required field</small>
+                            <small class="text-danger" *ngIf="username.errors?.['pattern']">
+                                Enter the valid email</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="pwd">Password:</label>
+                        <input type="password" class="form-control" placeholder="Enter Password" name="password"
+                            [(ngModel)]="user.password" required #password="ngModel"
+                            [class.is-invalid]="password.invalid && password.touched">
+                        <small class="text-danger" [class.d-none]="password.valid || password.untouched">
+                            *Password is required </small>
+
+                    </div>
+
+                    <button [disabled]="loginForm.form.invalid" type="submit" class="btn btn-primary">Login</button>
+
+                </form>
+
+                <small class="float-right" [routerLink]="['/registration']" style="color: aliceblue">New User?
+                    Register Here</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+

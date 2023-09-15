@@ -1,0 +1,29 @@
+.card{
+    
+    border: none;
+    width: 500px;
+    padding: 40px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: #011a29;
+background-image: linear-gradient(160deg, #011a29 0%, #80D0C7 100%);
+}
+
+.card h1{
+    color:#ffff;
+}
+
+.child{
+    
+    position: absolute;
+    left:2%;
+    top: 100%;
+    text-align: center;
+}
+
+label{
+    color:#ffff;
+}
+

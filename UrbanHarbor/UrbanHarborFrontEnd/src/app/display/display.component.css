@@ -1,0 +1,13 @@
+.cart{
+    border-style: outset;
+    border-radius: 5px;
+    font-size: small;
+}
+
+.card-img-top{
+
+    width: 100%;
+    height: 15vw;
+    object-fit: cover;
+
+}
